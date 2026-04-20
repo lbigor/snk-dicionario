@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node (para markdownlint-cli)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli@0.41.0
+
+      - name: Markdownlint
+        run: markdownlint '**/*.md' --ignore node_modules
+
+      - name: Valida frontmatter de SKILL.md
+        run: |
+          head -n 1 SKILL.md | grep -q '^---$' || { echo "SKILL.md sem frontmatter"; exit 1; }
+          awk '/^---$/{c++; next} c==1' SKILL.md | grep -q '^name:' || { echo "sem name:"; exit 1; }
+          awk '/^---$/{c++; next} c==1' SKILL.md | grep -q '^description:' || { echo "sem description:"; exit 1; }
+
+      - name: Executa test.sh
+        run: |
+          chmod +x test.sh
+          ./test.sh
+
+      - name: Link check (lychee)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --verbose --exclude-path node_modules './**/*.md'
+          fail: true
