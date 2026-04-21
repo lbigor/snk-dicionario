@@ -1,5 +1,8 @@
 # snk-dicionario
 
+[![Discussions](https://img.shields.io/github/discussions/lbigor/snk-dicionario)](https://github.com/lbigor/snk-dicionario/discussions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 > Skill Claude Code que impede invenção de campos/tabelas inexistentes em projetos Sankhya.
 
 **Problema:** dev cola nome de campo errado, descobre no deploy.
